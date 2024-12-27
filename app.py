@@ -12,7 +12,7 @@ def connect_db():
     try:
         return psycopg2.connect(
             host="singly-light-topi.data-1.use1.tembo.io",  # Substitua pelo seu host
-            database="pecas",  # Substitua pelo seu banco de dados
+            database="instance-1",  # Substitua pelo seu banco de dados
             user="postgres",  # Substitua pelo seu usuário
             password="7sw0F2MNx0ObN32g",  # Substitua pela sua senha
             port=5432  # Porta padrão do PostgreSQL
