@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import os
+
 
 # Criação da aplicação Flask
 app = Flask(__name__)
@@ -49,5 +51,7 @@ def home():
 
 # Execução da aplicação
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Usa a porta fornecida pelo ambiente, ou 5000 como padrão
+    app.run(debug=True, host='0.0.0.0', port=port)
+
 
