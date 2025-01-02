@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from typing import List
+from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -10,7 +11,7 @@ DB_CONN = "postgresql://postgres:7sw0F2MNx0ObN32g@singly-light-topi.data-1.use1.
 app = FastAPI()
 
 # Modelo de resposta para os dados
-class DadoBarragem(dict):
+class DadoBarragem(BaseModel):
     barragem: str
     data_e_hora: str
     nivel_m: float
@@ -40,9 +41,8 @@ async def get_dados():
         cursor.close()
         conn.close()
 
-        # Retornar os dados
+        # Retornar os dados como lista de dicionários
         return dados
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao obter dados: {e}")
-
