@@ -1,25 +1,15 @@
-from fastapi import FastAPI, HTTPException
-from typing import List
-from pydantic import BaseModel
+from flask import Flask, jsonify
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-# Conexão com o banco de dados
+# Configuração do banco de dados
 DB_CONN = "postgresql://postgres:7sw0F2MNx0ObN32g@singly-light-topi.data-1.use1.tembo.io:5432/postgres"
 
-# Criar a aplicação FastAPI
-app = FastAPI()
+# Inicializando o aplicativo Flask
+app = Flask(__name__)
 
-# Modelo de resposta para os dados
-class DadoBarragem(BaseModel):
-    barragem: str
-    data_e_hora: str
-    nivel_m: float
-    volume_mm: float
-
-# Endpoint para obter todos os dados
-@app.get("/dados", response_model=List[DadoBarragem])
-async def get_dados():
+@app.route("/dados", methods=["GET"])
+def get_dados():
     try:
         # Conectar ao banco de dados
         conn = psycopg2.connect(DB_CONN)
@@ -41,8 +31,13 @@ async def get_dados():
         cursor.close()
         conn.close()
 
-        # Retornar os dados como lista de dicionários
-        return dados
+        # Retornar os dados como JSON
+        return jsonify(dados), 200
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao obter dados: {e}")
+        # Retornar erro em caso de falha
+        return jsonify({"error": f"Erro ao obter dados: {e}"}), 500
+
+# Configuração do servidor
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
